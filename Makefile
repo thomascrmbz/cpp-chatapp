@@ -4,8 +4,8 @@ WEBSOCKET_LIB=../../../thomascrmbz/cpp-websocket
 # cpp-http-server(https://github.com/thomascrmbz/cpp-http-server) library path
 HTTP_LIB=../../../thomascrmbz/cpp-http-server
 
-DOCKER_CLIENT_NAME=thomascrmbz/chatapp-client
-DOCKER_SERVER_NAME=thomascrmbz/chatapp-server
+DOCKER_CLIENT_NAME=thomascrmbz/cpp-chatapp-client
+DOCKER_SERVER_NAME=thomascrmbz/cpp-chatapp-server
 
 all: mkdir dep server client
 

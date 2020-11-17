@@ -5,8 +5,8 @@
 ## Running
 
 A docker image of the server and client is available on Docker Hub.
-  - [chatapp-client](https://hub.docker.com/repository/docker/thomascrmbz/chatapp-client/)
-  - [chatapp-server](https://hub.docker.com/repository/docker/thomascrmbz/chatapp-server/)
+  - [cpp-chatapp-client](https://hub.docker.com/repository/docker/thomascrmbz/cpp-chatapp-client/)
+  - [cpp-chatapp-server](https://hub.docker.com/repository/docker/thomascrmbz/cpp-chatapp-server/)
 
 If you run it localy you will need to build the files (see [Building](#building)).
 When you have `client.out` and/or `server.out` you can run these commands.
@@ -23,10 +23,10 @@ If you want to run the app inside docker you can run:
 
 ```bash
 # to start the client
-docker run -it thomascrmbz/chatapp-client
+docker run -it thomascrmbz/cpp-chatapp-client
 
 # to start the server
-docker run -d --name chatapp-server thomascrmbz/chatapp-server
+docker run -d --name chatapp-server thomascrmbz/cpp-chatapp-server
 ```
 
 ## Building
@@ -60,7 +60,7 @@ make server HTTP_LIB=../cpp-http-server WEBSOCKET_LIB=./cpp-websocket
 
 ```bash
 # this wil build a server and a client image
-make docker DOCKER_CLIENT_NAME=example/chat-client DOCKER_SERVER_NAME=example/chat-server HTTP_LIB=../cpp-http-server WEBSOCKET_LIB=./cpp-websocket
+make docker DOCKER_CLIENT_NAME=example/cpp-chatapp-client DOCKER_SERVER_NAME=example/cpp-chatapp-server HTTP_LIB=../cpp-http-server WEBSOCKET_LIB=./cpp-websocket
 ```
 
 # License
