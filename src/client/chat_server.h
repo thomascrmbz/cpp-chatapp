@@ -8,7 +8,7 @@ namespace ChatApp {
 
     public:
       ChatServer(std::string ip);
-      ~ChatServer();    
+      ~ChatServer();
 
     private:
       std::string ip;
