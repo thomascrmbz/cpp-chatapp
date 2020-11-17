@@ -18,8 +18,6 @@ int main() {
   std::cout << "main thread + ChatUI::update thread is now running" << std::endl;
 
   while(true) {
-    std::cout << "> ";
-    std::cout.flush();
     chatUI.wait_for_chat_input();
     std::cout << "input: " << chatUI.get_input() << std::endl;
   }

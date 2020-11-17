@@ -25,6 +25,8 @@ ChatApp::ChatServer ChatUI::get_chat_server(void) {
 }
 
 void ChatUI::wait_for_chat_input(void) {
+  std::cout << "> ";
+  std::cout.flush();
   std::string input;
   do {
     std::getline(std::cin, input);
@@ -35,6 +37,11 @@ void ChatUI::wait_for_chat_input(void) {
 void ChatUI::update(ChatApp::ChatServer * chat_server) {
   while(true) {
     std::this_thread::sleep_for((std::chrono::milliseconds) 2000);
+    printf("\033[1A");
+
+    time_t now = time(0);
+    std::cout << "\nnew message" << "\n> ";
+    std::cout.flush();
   }
 }
 
