@@ -50,3 +50,9 @@ mkdir:
 
 clean:
 	rm -rf bin/
+
+dev_client:
+	make client && ./client.out
+
+dev_server:
+	make server && ./client.out
