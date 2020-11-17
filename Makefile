@@ -11,11 +11,11 @@ all: mkdir dep server client
 
 server:
 	g++ -c --std=c++11 src/server/main.cpp -I$(WEBSOCKET_LIB)/src -I$(HTTP_LIB)/src -o bin/server/main.o
-	g++ --std=c++11 bin/server/main.o -L$(WEBSOCKET_LIB)/bin -lWebSocket -L$(HTTP_LIB)/bin -lHTTP -o server.out
+	g++ --std=c++11 bin/server/main.o -L$(WEBSOCKET_LIB)/bin -lWebSocketServer -L$(HTTP_LIB)/bin -lHTTP -o server.out
 
 client:
 	g++ -c --std=c++11 src/client/main.cpp -I$(WEBSOCKET_LIB)/src -I$(HTTP_LIB)/src -o bin/client/main.o
-	g++ --std=c++11 bin/client/main.o -L$(WEBSOCKET_LIB)/bin -lWebSocket -L$(HTTP_LIB)/bin -lHTTP -o client.out
+	g++ --std=c++11 bin/client/main.o -L$(WEBSOCKET_LIB)/bin -lWebSocketClient -L$(HTTP_LIB)/bin -lHTTP -o client.out
 
 dep:
 	(cd $(WEBSOCKET_LIB); make)
