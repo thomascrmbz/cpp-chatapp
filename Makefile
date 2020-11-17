@@ -45,6 +45,10 @@ docker:
 	
 	rm -rf .lib/
 
+docker_push:
+	docker push $(DOCKER_CLIENT_NAME)
+	docker push $(DOCKER_SERVER_NAME)
+
 mkdir:
 	mkdir -p bin bin/server bin/client
 
