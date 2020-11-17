@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <future>
-#include <chrono>
 
 using namespace ChatApp;
 
@@ -36,11 +34,7 @@ void ChatUI::wait_for_chat_input(void) {
 
 void ChatUI::update(ChatApp::ChatServer * chat_server) {
   while(true) {
-    std::this_thread::sleep_for((std::chrono::milliseconds) 2000);
-    printf("\033[1A");
-
-    time_t now = time(0);
-    std::cout << "\nnew message" << "\n> ";
+    std::cout << chat_server->wait_and_get_message();
     std::cout.flush();
   }
 }

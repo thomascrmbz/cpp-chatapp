@@ -10,6 +10,9 @@ namespace ChatApp {
       ChatServer(std::string ip);
       ~ChatServer();
 
+    public:
+      std::string wait_and_get_message(void);
+
     private:
       std::string ip;
   };
