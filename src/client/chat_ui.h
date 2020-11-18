@@ -12,9 +12,11 @@ namespace ChatApp {
 
     public:
       std::string get_input(void) const;
+      std::string get_current_input(void) const;
 
     public:
       void wait_for_chat_input(void);
+      void show_input(void);
       void update(ChatApp::ChatServer * chat_server);
 
     public:
@@ -22,6 +24,6 @@ namespace ChatApp {
 
     private:
       std::string input;
-
+      std::string current_input;
   };
 }
