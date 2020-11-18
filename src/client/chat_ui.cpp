@@ -12,7 +12,8 @@ ChatUI::ChatUI(void) {
 }
 
 ChatUI::~ChatUI() {
-  system("clear");
+  std::cout << "Exiting..." << std::endl;
+  exit(0);
 }
 
 ChatApp::ChatServer ChatUI::get_chat_server(void) {
@@ -69,22 +70,43 @@ void ChatUI::wait_for_chat_input(void) {
 void ChatUI::update(ChatApp::ChatServer * chat_server) {
   while(true) {
     std::string message = chat_server->wait_and_get_message();
-    std::cout << "\n\033[2K\033[1A       fake_user \033[0m\033[1;31m|\033[0m \033[90m" << message << "\033[0m\033[K\n> " << this->get_current_input();
+    std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90mfake_user", message) << "\033[0m\033[K\n> " << this->get_current_input();
     std::cout.flush();
   }
 }
 
 void ChatUI::show_input(void) {
   std::string input = this->get_input();
-  if (input == "/help") {
-    std::cout << "                 \033[0m\033[1;90m|\033[0m " << "\033[94m/help \033[0m- show all available commands" << std::endl;
-    std::cout << "                 \033[0m\033[1;90m|\033[0m " << "\033[94m/exit \033[0m- exit the chat" << std::endl;
+  if (input[0] == '/') this->run_command(input);
+  else std::cout << this->format_output("\033[1;32myou", "\033[97m" + input) << std::endl;
+}
+
+// https://misc.flogisoft.com/bash/tip_colors_and_formatting
+void ChatUI::run_command(std::string command) {
+  if (command == "/help") {
+    std::cout << "\033[94m/help \033[0m- show all available commands" << std::endl;
+    std::cout << "\033[94m/msg <username> <message> \033[0m- send a private message" << std::endl;
+    std::cout << "\033[94m/r <message> \033[0m- reply to a private message" << std::endl;
+    std::cout << "\033[94m/exit \033[0m- exit the chat" << std::endl;
   }
-  else if (input == "/exit") {
-    std::cout << "                 \033[0m\033[1;90m|\033[0m " << "Exiting..." << std::endl;
-    exit(0);
+  else if (command == "/exit") delete this;
+  else if (command.substr(0, 3) == "/r " || command.substr(0, 5) == "/msg ") {
+    std::cout << "\033[1;35mTo \033[0mfake_user\033[97m:\033[90m Default private message.\033[0m" << std::endl;
+    std::cout << "\033[1;35mFrom \033[0mfake_user\033[97m:\033[0m I have recieved you private message!" << std::endl;
   }
-  else std::cout << "\033[1;32m             you \033[0m\033[1;31m|\033[0m " << input << std::endl;
+  else std::cout << "\033[1;31mThis command doesn\'t exist! Try /help.\033[0m" << std::endl;
+}
+
+std::string ChatUI::format_output(std::string message) const {
+  return this->format_output("", message);
+}
+
+std::string ChatUI::format_output(std::string username, std::string message) const {
+  return username + "\033[0m\033[97m:\033[0m " + message + "\033[0m";
+}
+
+std::string ChatUI::format_input(void) const {
+  return "";
 }
 
 std::string ChatUI::get_input(void) const {

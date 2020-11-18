@@ -17,7 +17,7 @@ std::string ChatServer::wait_and_get_message(void) {
   std::this_thread::sleep_for((std::chrono::milliseconds) 2000);
   srand(time(NULL));
 
-  std::string message = "Hey you! Here is a random number for you: " + std::to_string(rand() % 100);
+  std::string message = "Here is a random number: " + std::to_string(rand() % 100);
 
   return message;
 }
