@@ -13,10 +13,10 @@ When you have `client.out` and/or `server.out` you can run these commands.
 
 ```bash
 # to start the server
-./server
+./server.out
 
 # to start the client
-./client
+./client.out
 ```
 
 If you want to run the app inside docker you can run:
