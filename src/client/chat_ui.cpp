@@ -57,7 +57,7 @@ void ChatUI::wait_for_chat_input(void) {
       if (c == 127) str = str.substr(0, str.length() - 2);
     }
 
-    if (c == 127) printf("\n\033[2K\033[1A> %s\033[K", str.c_str());
+    if (c == 127) printf("\n\033[2K\033[1A> %s\033[0K", str.c_str());
 
     this->current_input = str;
   }
