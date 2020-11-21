@@ -1,7 +1,6 @@
 #include "chat_ui.h"
 
 #include <iostream>
-#include <string>
 
 #include "helper.h"
 
@@ -16,13 +15,13 @@ ChatUI::~ChatUI() {
   exit(0);
 }
 
-ChatApp::ChatServer ChatUI::get_chat_server(void) {
+std::string ChatUI::ask_ip(void) const {
   std::cout << "Server ip: ";
   std::string ip;
   std::cin >> ip;
   std::cin.ignore();
 
-  return ChatServer(ip);
+  return ip;
 }
 
 // http://www.climagic.org/mirrors/VT100_Escape_Codes.html
@@ -67,18 +66,27 @@ void ChatUI::wait_for_chat_input(void) {
   this->current_input = "";
 }
 
-void ChatUI::update(ChatApp::ChatServer * chat_server) {
-  while(true) {
-    std::string message = chat_server->wait_and_get_message();
-    std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90mfake_user", message) << "\033[0m\033[K\n> " << this->get_current_input();
-    std::cout.flush();
-  }
+// void ChatUI::update(ChatApp::ChatServer * chat_server) {
+//   // while(true) {
+//   //   std::string message = chat_server->wait_and_get_message();
+//     std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90mfake_user", message) << "\033[0m\033[K\n> " << this->get_current_input();
+//     std::cout.flush();
+//   // }
+// }
+
+void ChatUI::output(std::string message) {
+  std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90mfake_user", message) << "\033[0m\033[K\n> " << this->get_current_input();
+  std::cout.flush();
 }
 
 void ChatUI::show_input(void) {
   std::string input = this->get_input();
   if (input[0] == '/') this->run_command(input);
   else std::cout << this->format_output("\033[1;32myou", "\033[97m" + input) << std::endl;
+}
+
+bool ChatUI::is_command(void) const {
+  return this->get_input()[0] == '/';
 }
 
 // https://misc.flogisoft.com/bash/tip_colors_and_formatting

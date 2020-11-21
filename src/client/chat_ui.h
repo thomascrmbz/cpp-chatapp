@@ -1,6 +1,6 @@
 #pragma once
 
-#include "chat_server.h"
+#include <string>
 
 namespace ChatApp {
 
@@ -13,14 +13,13 @@ namespace ChatApp {
     public:
       std::string get_input(void) const;
       std::string get_current_input(void) const;
+      std::string ask_ip(void) const;
+      bool is_command(void) const;
 
     public:
       void wait_for_chat_input(void);
       void show_input(void);
-      void update(ChatApp::ChatServer * chat_server);
-
-    public:
-      ChatApp::ChatServer get_chat_server(void);
+      void output(std::string message);
 
     private:
       std::string format_output(std::string message) const;

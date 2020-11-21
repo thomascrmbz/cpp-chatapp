@@ -1,23 +1,45 @@
 #include "chat_server.h"
 
-#include <future>
+#include <thread>
 #include <chrono>
 
 using namespace ChatApp;
 
-ChatServer::ChatServer(std::string ip) {
+ChatServer::ChatServer(std::string ip, ChatApp::ChatUI * chatUI) {
   this->ip = ip;
+  this->chatUI = chatUI;
+
+  std::thread(&ChatServer::listen, this).detach();
+
 }
 
 ChatServer::~ChatServer() {
 
 }
 
-std::string ChatServer::wait_and_get_message(void) {
-  std::this_thread::sleep_for((std::chrono::milliseconds) 2000);
-  srand(time(NULL));
+void ChatServer::listen(void) {
+  WebSocket::Client client(this->ip);
 
-  std::string message = "Here is a random number: " + std::to_string(rand() % 100);
+  client.on_connection = [&](WebSocket::Connection * connection) {
 
-  return message;
+    this->ws_connection = connection;
+
+    connection->on_message = [&](std::string message) {
+      this->chatUI->output(message);
+    };
+  };
+
+  client.connect();
+}
+
+void ChatServer::send(std::string message) {
+  if (message.length() <= 123) {
+    uint8_t buffer[message.length() + 2];
+    buffer[0] = 0x81;
+    buffer[1] = (uint8_t) message.length();
+    for (int i = 0; i < message.length(); i++) buffer[i+2] = (uint8_t) message[i];
+
+    this->ws_connection->write(buffer, sizeof(buffer));
+  }
+  
 }

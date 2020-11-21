@@ -2,18 +2,27 @@
 
 #include <string>
 
+#include <websocket_client.h>
+
+#include "chat_ui.h"
+
 namespace ChatApp {
 
   class ChatServer {
 
     public:
-      ChatServer(std::string ip);
+      ChatServer(std::string ip, ChatApp::ChatUI * chatUI);
       ~ChatServer();
-
+      
     public:
-      std::string wait_and_get_message(void);
+      void send(std::string message);
+
+    private:
+      void listen(void);
 
     private:
       std::string ip;
+      ChatApp::ChatUI * chatUI;
+      WebSocket::Connection * ws_connection;
   };
 }
