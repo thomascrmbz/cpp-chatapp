@@ -33,13 +33,5 @@ void ChatServer::listen(void) {
 }
 
 void ChatServer::send(std::string message) {
-  if (message.length() <= 123) {
-    uint8_t buffer[message.length() + 2];
-    buffer[0] = 0x81;
-    buffer[1] = (uint8_t) message.length();
-    for (int i = 0; i < message.length(); i++) buffer[i+2] = (uint8_t) message[i];
-
-    this->ws_connection->write(buffer, sizeof(buffer));
-  }
-  
+  this->ws_connection->write(message);
 }
