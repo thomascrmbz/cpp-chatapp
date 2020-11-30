@@ -5,26 +5,29 @@
 #include <thread>
 #include <chrono>
 
-
-void fake_input(WebSocket::Connection * connection) {
-  while (connection->is_connected()) {
-    connection->write("Fake input");
-    std::this_thread::sleep_for((std::chrono::seconds) 1);
-  }
+std::string trim_string(std::string str) {
+  std::string s = "";
+  for (char c : str) if (c != 0) s += c;
+  return s;
 }
 
 int main() {
 
   WebSocket::Server server;
 
-  server.on_connection = [](WebSocket::Connection * connection) {
+  server.set_debug(true);
+
+  std::vector<WebSocket::Connection *> connections;
+
+  server.on_connection = [&](WebSocket::Connection * connection) {
     connection->write("Hello World!");
+    connections.push_back(connection);
 
-    std::thread(fake_input, connection).detach();
-
-    connection->on_message = [connection](std::string message) {
+    connection->on_message = [connection, connections](std::string message) {
       std::cout << message << std::endl;
-      connection->write("Default reply");
+      for (WebSocket::Connection * con : connections) {
+        if (con->is_connected() && con != connection) con->write(trim_string(message));
+      }
     };
   };
 

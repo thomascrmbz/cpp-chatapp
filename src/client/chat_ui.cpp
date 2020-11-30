@@ -75,7 +75,7 @@ void ChatUI::wait_for_chat_input(void) {
 // }
 
 void ChatUI::output(std::string message) {
-  std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90mfake_user", message) << "\033[0m\033[K\n> " << this->get_current_input();
+  std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90muser", message) << "\033[0m\033[K\n> " << this->get_current_input();
   std::cout.flush();
 }
 
@@ -99,8 +99,8 @@ void ChatUI::run_command(std::string command) {
   }
   else if (command == "/exit") delete this;
   else if (command.substr(0, 3) == "/r " || command.substr(0, 5) == "/msg ") {
-    std::cout << "\033[1;35mTo \033[0mfake_user\033[97m:\033[90m Default private message.\033[0m" << std::endl;
-    std::cout << "\033[1;35mFrom \033[0mfake_user\033[97m:\033[0m I have recieved you private message!" << std::endl;
+    std::cout << "\033[1;35mTo \033[0muser\033[97m:\033[90m Default private message.\033[0m" << std::endl;
+    std::cout << "\033[1;35mFrom \033[0muser\033[97m:\033[0m I have recieved you private message!" << std::endl;
   }
   else std::cout << "\033[1;31mThis command doesn\'t exist! Try /help.\033[0m" << std::endl;
 }
