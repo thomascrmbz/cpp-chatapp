@@ -107,9 +107,11 @@ void ChatUI::run_command(std::string command) {
     std::cout << "\033[94m/exit \033[0m- exit the chat" << std::endl;
   }
   else if (command == "/exit") delete this;
-  else if (command.substr(0, 3) == "/r " || command.substr(0, 5) == "/msg ") {
-    std::cout << "\033[1;35mTo \033[0muser\033[97m:\033[90m Default private message.\033[0m" << std::endl;
-    std::cout << "\033[1;35mFrom \033[0muser\033[97m:\033[0m I have recieved you private message!" << std::endl;
+  else if (command.substr(0, 5) == "/msg " && (command.find_first_of(" ") != command.find_last_of(" "))) {
+    std::string username = command.substr(5, command.substr(6, command.size() - 1).find_first_of(" ") + 1);
+    std::string message =  command.substr(5 + username.size() + 1, command.size() - 1);
+    std::cout << "\033[1;35mTo \033[0m" + username + "\033[97m:\033[90m " + message + "\033[0m" << std::endl;
+    this->input = "private!" + username + ";" + message;
   }
   else std::cout << "\033[1;31mThis command doesn\'t exist! Try /help.\033[0m" << std::endl;
 }
