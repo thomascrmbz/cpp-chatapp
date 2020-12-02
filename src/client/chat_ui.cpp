@@ -24,6 +24,15 @@ std::string ChatUI::ask_ip(void) const {
   return ip;
 }
 
+std::string ChatUI::ask_username(void) const {
+  std::cout << "Username: ";
+  std::string username;
+  std::cin >> username;
+  std::cin.ignore();
+
+  return username;
+}
+
 // http://www.climagic.org/mirrors/VT100_Escape_Codes.html
 void ChatUI::wait_for_chat_input(void) {
   std::cout << "> ";
@@ -74,8 +83,8 @@ void ChatUI::wait_for_chat_input(void) {
 //   // }
 // }
 
-void ChatUI::output(std::string message) {
-  std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90muser", message) << "\033[0m\033[K\n> " << this->get_current_input();
+void ChatUI::output(std::string username, std::string message) {
+  std::cout << "\n\033[2K\033[1A" << this->format_output("\033[90m" + username, message) << "\033[0m\033[K\n> " << this->get_current_input();
   std::cout.flush();
 }
 

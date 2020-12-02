@@ -11,7 +11,7 @@ int main() {
   ChatUI chatUI;
   std::cout << "Welcome to the C++ Chat App!" << std::endl;
 
-  ChatServer chat_server(chatUI.ask_ip(), &chatUI);
+  ChatServer chat_server(chatUI.ask_ip(), &chatUI, chatUI.ask_username());
 
   std::cout << "/help to show all available commands" << std::endl;
 

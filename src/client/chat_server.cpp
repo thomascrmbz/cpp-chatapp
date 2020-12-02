@@ -5,9 +5,10 @@
 
 using namespace ChatApp;
 
-ChatServer::ChatServer(std::string ip, ChatApp::ChatUI * chatUI) {
+ChatServer::ChatServer(std::string ip, ChatApp::ChatUI * chatUI, std::string username) {
   this->ip = ip;
   this->chatUI = chatUI;
+  this->username = username;
 
   std::thread(&ChatServer::listen, this).detach();
 
@@ -24,8 +25,16 @@ void ChatServer::listen(void) {
 
     this->ws_connection = connection;
 
-    connection->on_message = [&](std::string message) {
-      this->chatUI->output(message);
+    WebSocket::Frame frame(this->username);
+    frame.set_opcode(0x3);
+    connection->write(frame);
+
+    connection->on_message = [&](WebSocket::Frame frame) {
+      std::string payload = frame.get_payload();
+      std::string username = payload.substr(0, payload.find_first_of(";"));
+      std::string message = payload.substr(payload.find_first_of(";") + 1, payload.size() - 1);
+
+      if (frame.get_opcode() == 0x01) this->chatUI->output(username, message);
     };
   };
 

@@ -11,7 +11,7 @@ namespace ChatApp {
   class ChatServer {
 
     public:
-      ChatServer(std::string ip, ChatApp::ChatUI * chatUI);
+      ChatServer(std::string ip, ChatApp::ChatUI * chatUI, std::string username);
       ~ChatServer();
       
     public:
@@ -24,5 +24,6 @@ namespace ChatApp {
       std::string ip;
       ChatApp::ChatUI * chatUI;
       WebSocket::Connection * ws_connection;
+      std::string username;
   };
 }
