@@ -21,6 +21,7 @@ namespace ChatApp {
       void wait_for_chat_input(void);
       void show_input(void);
       void output(std::string username, std::string message);
+      void output(std::string text);
 
     private:
       std::string format_output(std::string message) const;

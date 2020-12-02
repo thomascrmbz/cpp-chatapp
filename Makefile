@@ -7,10 +7,10 @@ HTTP_LIB=../../../thomascrmbz/cpp-http-server
 DOCKER_CLIENT_NAME=thomascrmbz/cpp-chatapp-client
 DOCKER_SERVER_NAME=thomascrmbz/cpp-chatapp-server
 
-CLIENT_SOURCES := $(wildcard src/client/*.cpp)
+CLIENT_SOURCES := $(wildcard src/client/*.cpp) $(wildcard src/client/*/*.cpp) $(wildcard src/client/*/*/*.cpp)
 CLIENT_NAMES := $(CLIENT_SOURCES:src/%.cpp=%)
 
-SERVER_SOURCES := $(wildcard src/server/*.cpp)
+SERVER_SOURCES := $(wildcard src/server/*.cpp) $(wildcard src/server/*/*.cpp) $(wildcard src/server/*/*/*.cpp)
 SERVER_NAMES := $(SERVER_SOURCES:src/%.cpp=%)
 
 all: mkdir dep server client
@@ -50,7 +50,7 @@ docker_push:
 	docker push $(DOCKER_SERVER_NAME)
 
 mkdir:
-	mkdir -p bin bin/server bin/client
+	mkdir -p bin bin/server bin/client bin/server/minigames bin/server/minigames/card bin/server/minigames/hangman
 
 clean:
 	rm -rf bin/

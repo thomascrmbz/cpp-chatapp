@@ -6,6 +6,8 @@
 #include <chrono>
 
 #include "user.h"
+#include "minigames/hangman/hangman.h"
+#include "minigames/card/card.h"
 
 static std::vector<ChatApp::User> users;
 
@@ -47,7 +49,16 @@ int main() {
           WebSocket::Frame f("private!" + get_user(connection).get_username() + ";" + message);
           f.set_opcode(0x04);
           get_user(username).get_connection()->write(f);
-        } else {
+        }
+        else if (frame.get_opcode() == 0xB) {
+          if (trim_string(frame.get_payload()) == "minigame!hangman;start") std::thread(&MiniGame::Hangman::game_loop, MiniGame::Hangman(&users)).detach();
+          if (trim_string(frame.get_payload()) == "minigame!card;start") {
+            WebSocket::Frame f(MiniGame::Card().to_string());
+            f.set_opcode(0xB);
+            connection->write(f);
+          }
+        }
+        else {
           for (WebSocket::Connection * con : connections) {
             if (con->is_connected() && con != connection) con->write("global!" + get_user(connection).get_username() + ";" + trim_string(frame.get_payload()));
           }

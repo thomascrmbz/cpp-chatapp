@@ -88,6 +88,11 @@ void ChatUI::output(std::string username, std::string message) {
   std::cout.flush();
 }
 
+void ChatUI::output(std::string text) {
+  std::cout << "\n\033[2K\033[1A\e[2K" << text << "\033[0m\033[K\n> " << this->get_current_input();
+  std::cout.flush();
+}
+
 void ChatUI::show_input(void) {
   std::string input = this->get_input();
   if (input[0] == '/') this->run_command(input);
@@ -112,6 +117,14 @@ void ChatUI::run_command(std::string command) {
     std::string message =  command.substr(5 + username.size() + 1, command.size() - 1);
     std::cout << "\033[1;35mTo \033[0m" + username + "\033[97m:\033[90m " + message + "\033[0m" << std::endl;
     this->input = "private!" + username + ";" + message;
+  }
+  else if (command == "/play hangman") {
+    std::cout << "\033[94mCongrats on finding an easter-egg!\e[0m" << std::endl;
+    this->input = "minigame!hangman;start";
+  }
+  else if (command == "/play card") {
+    std::cout << "\033[94mCongrats on finding an easter-egg!\e[0m" << std::endl;
+    this->input = "minigame!card;start";
   }
   else std::cout << "\033[1;31mThis command doesn\'t exist! Try /help.\033[0m" << std::endl;
 }
