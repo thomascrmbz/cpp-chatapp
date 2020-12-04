@@ -19,25 +19,23 @@ namespace ChatApp {
     public:
       void print_global_message(std::string username, std::string message);
       void print_private_message(std::string username, std::string message);
+      void print_broadcast(std::string text);
+      void print(std::string text);
 
     public:
-      std::function<void()> on_command = []() {};
+      std::function<void(std::string)> on_command = [](std::string command) {};
       std::function<void(std::string)> on_message = [](std::string message) {};
 
     public:
-      void loop(void);
-      void clear(void);
+      void run(void);
 
     private:
-      void print(std::string text);
+      std::string ask(std::string message);
 
     private:
-      void render(void);
-
-    private:
-      int width = 0;
-      int height = 0;
-      std::vector<std::vector<char>> screen;
+      std::string current_input = "";
+      std::string previous_input = "";
+      std::string next_input = "";
 
   };
 

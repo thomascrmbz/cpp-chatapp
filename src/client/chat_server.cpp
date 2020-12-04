@@ -1,6 +1,7 @@
 #include "chat_server.h"
 
 #include <thread>
+#include "helper.h"
 
 using namespace ChatApp;
 
@@ -41,9 +42,15 @@ void ChatServer::listen(void) {
       std::string username = payload.substr(payload.find_first_of("!") + 1, payload.find_first_of(";") - payload.find_first_of("!") - 1);
       std::string message = payload.substr(payload.find_first_of(";") + 1, payload.size() - 1);
 
-      this->on_message(username, message, frame.get_opcode());
+      this->on_message(Helper::trim_string(username), Helper::trim_string(message), frame.get_opcode());
     };
+    
+    this->connected = true;
   };
 
   client.connect();
+}
+
+bool ChatServer::is_connected(void) {
+  return this->connected;
 }

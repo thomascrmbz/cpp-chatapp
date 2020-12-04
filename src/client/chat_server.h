@@ -18,6 +18,7 @@ namespace ChatApp {
     public:
       void connect(void);
       void write(std::string message, int type);
+      bool is_connected(void);
 
     public:
       std::function<void(std::string, std::string, int)> on_message = [](std::string username, std::string message, int type) {};
@@ -29,6 +30,7 @@ namespace ChatApp {
       std::string ip;
       std::string username;
       WebSocket::Connection * connection;
+      bool connected = false;
 
   };
 
