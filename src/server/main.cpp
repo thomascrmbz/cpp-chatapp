@@ -26,7 +26,15 @@ int main() {
       std::cout << frame.get_payload() << std::endl;
       
       try {
-        if (frame.get_opcode() == 0x3) ChatApp::User::add_user(ChatApp::User(trim_string(frame.get_payload()), connection));
+        if (frame.get_opcode() == 0x3) {
+          ChatApp::User::add_user(ChatApp::User(trim_string(frame.get_payload()), connection));
+
+          for (WebSocket::Connection * con : connections) {
+            WebSocket::Frame f("broadcast!" + trim_string(frame.get_payload()) + ";joined");
+            f.set_opcode(0xB);
+            if (con->is_connected() && con != connection) con->write(f);
+          }
+        }
         else if (frame.get_opcode() == 0x4) {
           std::string username = frame.get_payload().substr(0, frame.get_payload().find_first_of(";"));
           std::string message = trim_string(frame.get_payload()).substr(trim_string(frame.get_payload()).find_first_of(";") + 1, trim_string(frame.get_payload()).size() - 1);
@@ -45,6 +53,11 @@ int main() {
     };
 
     connection->on_close = [connection]() {
+      for (WebSocket::Connection * con : connections) {
+        WebSocket::Frame frame("broadcast!" + ChatApp::User::get_user(connection)->get_username() + ";left");
+        frame.set_opcode(0xB);
+        if (con->is_connected() && con != connection) con->write(frame);
+      }
       ChatApp::User::delete_user(connection);
     };
   };
