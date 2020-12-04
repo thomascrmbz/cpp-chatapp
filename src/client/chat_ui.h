@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <functional>
+#include <vector>
 
 namespace ChatApp {
 
@@ -11,25 +13,32 @@ namespace ChatApp {
       ~ChatUI();
 
     public:
-      std::string get_input(void) const;
-      std::string get_current_input(void) const;
-      std::string ask_ip(void) const;
-      std::string ask_username(void) const;
-      bool is_command(void) const;
+      std::string ask_ip(void);
+      std::string ask_username(void);
 
     public:
-      void wait_for_chat_input(void);
-      void show_input(void);
-      void output(std::string username, std::string message);
+      void print_global_message(std::string username, std::string message);
+      void print_private_message(std::string username, std::string message);
+
+    public:
+      std::function<void()> on_command = []() {};
+      std::function<void(std::string)> on_message = [](std::string message) {};
+
+    public:
+      void loop(void);
+      void clear(void);
 
     private:
-      std::string format_output(std::string message) const;
-      std::string format_output(std::string username, std::string message) const;
-      std::string format_input(void) const;
-      void run_command(std::string command);
+      void print(std::string text);
 
     private:
-      std::string input;
-      std::string current_input;
+      void render(void);
+
+    private:
+      int width = 0;
+      int height = 0;
+      std::vector<std::vector<char>> screen;
+
   };
+
 }

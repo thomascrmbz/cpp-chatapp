@@ -1,25 +1,29 @@
-#include <iostream>
-#include <future>
-
-#include <websocket_client.h>
 #include "chat_ui.h"
 #include "chat_server.h"
 
 using namespace ChatApp;
 
 int main() {
-  ChatUI chatUI;
-  std::cout << "Welcome to the C++ Chat App!" << std::endl;
+  ChatUI chat_ui;
+  ChatServer chat_server(chat_ui.ask_ip());
 
-  ChatServer chat_server(chatUI.ask_ip(), &chatUI, chatUI.ask_username());
+  chat_server.set_username(chat_ui.ask_username());
 
-  std::cout << "/help to show all available commands" << std::endl;
+  chat_server.on_message = [&](std::string username, std::string message, int type) {
+    if (type == 0x1) chat_ui.print_global_message(username, message);
+    if (type == 0x4) chat_ui.print_private_message(username, message);
+  };
 
-  while(true) {
-    chatUI.wait_for_chat_input();
-    chatUI.show_input();
-    if (!chatUI.is_command()) chat_server.send(chatUI.get_input());
-  }
+  chat_ui.on_command = []() {
+
+  };
+
+  chat_ui.on_message = [&](std::string message) {
+    chat_server.write(message, 0x1);
+  };
+
+  chat_server.connect();
+  chat_ui.loop();
 
   return 0;
 }

@@ -1,29 +1,35 @@
 #pragma once
 
 #include <string>
-
+#include <functional>
 #include <websocket_client.h>
-
-#include "chat_ui.h"
 
 namespace ChatApp {
 
   class ChatServer {
 
     public:
-      ChatServer(std::string ip, ChatApp::ChatUI * chatUI, std::string username);
+      ChatServer(std::string ip);
       ~ChatServer();
-      
+
     public:
-      void send(std::string message);
+      void set_username(std::string username);
+
+    public:
+      void connect(void);
+      void write(std::string message, int type);
+
+    public:
+      std::function<void(std::string, std::string, int)> on_message = [](std::string username, std::string message, int type) {};
 
     private:
       void listen(void);
 
     private:
       std::string ip;
-      ChatApp::ChatUI * chatUI;
-      WebSocket::Connection * ws_connection;
       std::string username;
+      WebSocket::Connection * connection;
+
   };
+
 }
