@@ -28,7 +28,7 @@ void ChatUI::print_global_message(std::string username, std::string message) {
 }
 
 void ChatUI::print_private_message(std::string username, std::string message) {
-  this->print("\e[1;35mFrom \e[0m" + username + " " + message);
+  this->print("\e[1;35mFrom \e[0m" + username + ": " + message);
 }
 
 void ChatUI::print_broadcast(std::string text) {
@@ -104,10 +104,7 @@ void ChatUI::run(void) {
     this->previous_input = input;
     this->next_input = "";
 
-    if (input[0] == '/') {
-      this->print("\e[1;31mThis command doesn\'t exist! Try /help.\e[0m");
-      this->on_command(input);
-    }
+    if (input[0] == '/') this->handle_command(input);
     else {
       this->print_global_message("\e[1;32myou", input);
       this->on_message(input);
@@ -122,4 +119,14 @@ std::string ChatUI::ask(std::string message) {
   std::cin.ignore();
 
   return str;
+}
+
+void ChatUI::handle_command(std::string input) {
+  std::string command = input.substr(1, input.find_first_of(' ') - 1);
+  std::vector<std::string> command_list = { "exit", "help", "msg" };
+  std::vector<std::string> args;
+  if (input.size() > (command.size() + 2)) args = Helper::string_to_vector(input.substr(command.length() + 2, input.size() - 1));
+  
+  if (std::find(command_list.begin(), command_list.end(), command) != command_list.end()) this->on_command(command, args);
+  else this->print("\e[1;31mThis command doesn\'t exist! Try /help.\e[0m");
 }

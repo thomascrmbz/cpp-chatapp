@@ -23,7 +23,7 @@ namespace ChatApp {
       void print(std::string text);
 
     public:
-      std::function<void(std::string)> on_command = [](std::string command) {};
+      std::function<void(std::string, std::vector<std::string>)> on_command = [](std::string command, std::vector<std::string> args) {};
       std::function<void(std::string)> on_message = [](std::string message) {};
 
     public:
@@ -31,6 +31,7 @@ namespace ChatApp {
 
     private:
       std::string ask(std::string message);
+      void handle_command(std::string input);
 
     private:
       std::string current_input = "";
