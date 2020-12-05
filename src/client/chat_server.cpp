@@ -1,29 +1,37 @@
 #include "chat_server.h"
 
 #include <thread>
-#include <chrono>
+#include "helper.h"
 
 using namespace ChatApp;
 
-ChatServer::ChatServer(std::string ip, ChatApp::ChatUI * chatUI, std::string username) {
+ChatServer::ChatServer(std::string ip) {
   this->ip = ip;
-  this->chatUI = chatUI;
-  this->username = username;
-
-  std::thread(&ChatServer::listen, this).detach();
-
 }
 
 ChatServer::~ChatServer() {
 
 }
 
+void ChatServer::set_username(std::string username) {
+  this->username = username;
+}
+
+void ChatServer::connect(void) {
+  std::thread(&ChatServer::listen, this).detach();
+}
+
+void ChatServer::write(std::string message, int type) {
+  WebSocket::Frame frame(message);
+  frame.set_opcode(type);
+  this->connection->write(frame);
+}
+
 void ChatServer::listen(void) {
   WebSocket::Client client(this->ip);
 
   client.on_connection = [&](WebSocket::Connection * connection) {
-
-    this->ws_connection = connection;
+    this->connection = connection;
 
     WebSocket::Frame frame(this->username);
     frame.set_opcode(0x3);
@@ -34,19 +42,15 @@ void ChatServer::listen(void) {
       std::string username = payload.substr(payload.find_first_of("!") + 1, payload.find_first_of(";") - payload.find_first_of("!") - 1);
       std::string message = payload.substr(payload.find_first_of(";") + 1, payload.size() - 1);
 
-      if (frame.get_opcode() == 0x01) this->chatUI->output(username, message);
-      if (frame.get_opcode() == 0x04) this->chatUI->output("\e[1;35mFrom \e[0m" + username, message);
+      this->on_message(Helper::trim_string(username), Helper::trim_string(message), frame.get_opcode());
     };
+    
+    this->connected = true;
   };
 
   client.connect();
 }
 
-void ChatServer::send(std::string message) {
-  if (message.find("private!") == 0) {
-    WebSocket::Frame frame(message.substr(message.find("!") + 1, message.size() - 1));
-    frame.set_opcode(0x04);
-    this->ws_connection->write(frame);
-  }
-  else this->ws_connection->write(message);
+bool ChatServer::is_connected(void) {
+  return this->connected;
 }

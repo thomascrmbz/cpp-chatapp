@@ -3,6 +3,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <sstream>
 
 char Helper::getch(void) {
     char buf = 0;
@@ -29,7 +30,15 @@ char Helper::getch(void) {
 }
 
 std::string Helper::trim_string(std::string str) {
-    str.erase(0, str.find_first_not_of(' '));       //prefixing spaces
-    str.erase(str.find_last_not_of(' ')+1);         //surfixing spaces
+    str.erase(0, str.find_first_not_of(' '));
+    str.erase(str.find_last_not_of(' ') + 1);
     return str;
+}
+
+std::vector<std::string> Helper::string_to_vector(std::string str) {
+    std::string line = "";
+    std::vector<std::string> vec = {};
+    std::stringstream ss(str);
+    while(std::getline(ss, line, ' ')) vec.push_back(line);
+    return vec;
 }
