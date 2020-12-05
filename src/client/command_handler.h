@@ -20,15 +20,18 @@ namespace ChatApp {
           // chat_ui->print("\e[94m/r <message> \e[0m- reply to a private message");
           chat_ui->print("\e[94m/exit \e[0m- exit the chat");
         }
-        if (command == "msg" && args.size() > 1) {
-          std::stringstream ss;
-          std::copy(args.begin() + 1, args.end() - 1, std::ostream_iterator<std::string>(ss, " "));
-          ss << args.back();
+        if (command == "msg") {
+          if (args.size() > 1) {
+            std::stringstream ss;
+            std::copy(args.begin() + 1, args.end() - 1, std::ostream_iterator<std::string>(ss, " "));
+            ss << args.back();
 
-          std::string username = args[0];
-          std::string message = ss.str();
-          chat_server->write(username + ";" + message, 0x4);
-          chat_ui->print("\e[1;35mTo \e[0m" + username + ": " + message);
+            std::string username = args[0];
+            std::string message = ss.str();
+            chat_server->write(username + ";" + message, 0x4);
+            chat_ui->print("\e[1;35mTo \e[0m" + username + ": " + message);
+          }
+          else chat_ui->print("\e[1;31m/msg <username> <message>");
         }
         if (command == "exit") exit(0);
       }
