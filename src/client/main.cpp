@@ -1,6 +1,7 @@
 #include "chat_ui.h"
 #include "chat_server.h"
 #include <sstream>
+#include <iterator>
 
 using namespace ChatApp;
 

@@ -121,12 +121,18 @@ std::string ChatUI::ask(std::string message) {
   return str;
 }
 
+bool includes_command(std::string command) {
+  std::vector<std::string> command_list = { "exit", "help", "msg" };
+  for (auto x : command_list) if (x == command) return true;
+  return false;
+}
+
 void ChatUI::handle_command(std::string input) {
   std::string command = input.substr(1, input.find_first_of(' ') - 1);
-  std::vector<std::string> command_list = { "exit", "help", "msg" };
+  
   std::vector<std::string> args;
   if (input.size() > (command.size() + 2)) args = Helper::string_to_vector(input.substr(command.length() + 2, input.size() - 1));
   
-  if (std::find(command_list.begin(), command_list.end(), command) != command_list.end()) this->on_command(command, args);
+  if (includes_command(command)) this->on_command(command, args);
   else this->print("\e[1;31mThis command doesn\'t exist! Try /help.\e[0m");
 }
