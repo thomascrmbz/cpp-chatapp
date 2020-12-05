@@ -1,7 +1,6 @@
 #include "chat_ui.h"
 #include "chat_server.h"
-#include <sstream>
-#include <iterator>
+#include "command_handler.h"
 
 using namespace ChatApp;
 
@@ -18,24 +17,7 @@ int main() {
   };
 
   chat_ui.on_command = [&](std::string command, std::vector<std::string> args) {
-    // @todo move to a command handler
-    if (command == "help") {
-      chat_ui.print("\e[94m/help \e[0m- show all available commands");
-      chat_ui.print("\e[94m/msg <username> <message> \e[0m- send a private message");
-      // chat_ui.print("\e[94m/r <message> \e[0m- reply to a private message");
-      chat_ui.print("\e[94m/exit \e[0m- exit the chat");
-    }
-    if (command == "msg" && args.size() > 1) {
-      std::stringstream ss;
-      std::copy(args.begin() + 1, args.end() - 1, std::ostream_iterator<std::string>(ss, " "));
-      ss << args.back();
-
-      std::string username = args[0];
-      std::string message = ss.str();
-      chat_server.write(username + ";" + message, 0x4);
-      chat_ui.print("\e[1;35mTo \e[0m" + username + ": " + message);
-    }
-    if (command == "exit") exit(0);
+    CommandHandler::handle(command, args, &chat_ui, &chat_server);
   };
 
   chat_ui.on_message = [&](std::string message) {
